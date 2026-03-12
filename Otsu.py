@@ -1,0 +1,51 @@
+# 1.打开影像
+# 2.波段
+# 3.自动选取阈值（Otsu）
+# 4.进行二值化分割
+
+from osgeo import gdal
+import rasterio
+import numpy as np
+import os
+import basic
+import cv2
+
+# 线性拉伸 2%-98%
+def Linering_2per(image):
+    p2 = np.nanpercentile(image,2)
+    p98 = np.nanpercentile(image,98)        # 去除空值
+    # print(p2)
+    # print(p98)
+    data = np.clip(image,p2,p98)
+    # 归一化拉伸
+    image_new = (data - p2) / (p98 - p2) * 255
+
+    image_unit8 = image_new.astype(np.uint8)
+    return image_unit8
+# 计算阈值
+def Otsu(image):
+    """
+    只给出阈值
+    """
+    # 应用Otsu阈值分割
+    otsu_threshold, image_result = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    print("Otsu阈值为: ", otsu_threshold)
+    # cv2.imshow("Otsu影像结果为:", image_result)
+    # cv2.waitKey(0)
+    return otsu_threshold
+
+if __name__ == '__main__':
+    
+    # input_path = r"F:\毕设数据\书写代码过程中数据\seviot.tif"
+    input_path = r"F:\毕设数据\书写代码过程中数据\11.tif"
+    save_path = r"F:\毕设数据\书写代码过程中数据\15.tif"
+    image, image_profile,image_shape,image_transform,meta_b4 = basic.open_image(input_path)   # 读取影像应该为八位或16位整数
+
+    image_Liner = Linering_2per(image)
+    threshold = Otsu(image_Liner)
+    # 大于阈值的为1
+    binary_image = np.where(image_Liner > threshold,0,1)
+    # a =  test_lashen(image1)
+    basic.save_image(save_path,meta_b4,binary_image)
+
+    print("ending!")

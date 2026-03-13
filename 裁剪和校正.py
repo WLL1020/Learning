@@ -109,9 +109,9 @@ def remove_file(in_path):
 if __name__ == "__main__":
     # 直接执行函数
     start = time.perf_counter()  # 开始时间
-    in_shape = r"F:\毕设数据\毕设数据_准备\行政边界\武夷山市.shp" # 矢量范围
-    in_path = r"F:\毕设数据\毕设数据_准备\LC08_L2SP_120041_20191116_20200825_02_T1"# 输入栅格路径
-    out_path = r"F:\毕设数据\武夷山"  # 输出栅格路径
+    in_shape = r"F:\毕设数据\玉龙\边框\玉龙研究区.shp" # 矢量范围
+    in_path = r"F:\毕设数据\地形辐射校正方法学习数据\LC08_L2SP_131041_20210102_20210308_02_T1"# 输入栅格路径
+    out_path = r"F:\毕设数据\玉龙\yl202101i"  # 输出栅格路径
     clip_batch(in_path, out_path, in_shape)
     # Radiometric_Correction(out_path,out_path)
     # remove_file(out_path)
